@@ -16,13 +16,12 @@ int main(){
             vector<char> d(s2.begin(), s2.end());
             d.push_back('\0');
 
-            char* token = strtok(buf.data(), d.data());
+            char* token = sjtu::strtok(buf.data(), d.data());
             while(token){
                 cout << token << "\n";
-                token = strtok(nullptr, d.data());
+                token = sjtu::strtok(nullptr, d.data());
             }
         }
     }
     return 0;
 }
-
