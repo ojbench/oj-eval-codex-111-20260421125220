@@ -95,6 +95,13 @@ class ACMOJClient:
 
         return result
 
+    def submit_code(self, problem_id: int, code: str, language: str = "cpp") -> Optional[Dict]:
+        data = {"language": language, "code": code}
+        result = self._make_request("POST", f"/problem/{problem_id}/submit", data=data)
+        if result and 'id' in result:
+            self._save_submission_id(result['id'])
+        return result
+
     def get_submission_detail(self, submission_id: int) -> Optional[Dict]:
         return self._make_request("GET", f"/submission/{submission_id}")
 
@@ -113,6 +120,12 @@ def main():
     submit_parser = subparsers.add_parser("submit", help="Submit Git repository")
     submit_parser.add_argument("--problem-id", type=int, required=True, help="Problem ID")
     submit_parser.add_argument("--git-url", type=str, required=True, help="Git repository URL")
+
+    # Code submission from local file
+    submit_file_parser = subparsers.add_parser("submit_file", help="Submit local source as code")
+    submit_file_parser.add_argument("--problem-id", type=int, required=True, help="Problem ID")
+    submit_file_parser.add_argument("--file", type=str, required=True, help="Path to local source file (e.g., src.hpp)")
+    submit_file_parser.add_argument("--lang", type=str, default="cpp", help="Language tag (default: cpp)")
 
     # Sub-command for checking submission status
     status_parser = subparsers.add_parser("status", help="Check submission status")
@@ -136,6 +149,14 @@ def main():
         result = client.get_submission_detail(args.submission_id)
     elif args.command == "abort":
         result = client.abort_submission(args.submission_id)
+    elif args.command == "submit_file":
+        try:
+            with open(args.file, 'r') as f:
+                code_str = f.read()
+        except Exception as e:
+            print(f"Failed to read file {args.file}: {e}")
+            return
+        result = client.submit_code(args.problem_id, code_str, args.lang)
 
     if result:
         print(json.dumps(result))
