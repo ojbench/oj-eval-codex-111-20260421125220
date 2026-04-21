@@ -1,7 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+namespace sjtu {
 #include "src.hpp"
+}
 
 int main(){
     ios::sync_with_stdio(false);

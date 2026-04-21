@@ -1,9 +1,7 @@
 // Problem 111 - Cstring Implement III
 // Implement a custom strtok without using any standard library and no global variables.
 
-namespace sjtu {
-
-static int is_delim_local(char c, const char * __restrict delim) {
+static int is_delim_local(char c, const char *delim) {
     if (!delim) return 0;
     const char *p = delim;
     while (*p) {
@@ -13,7 +11,7 @@ static int is_delim_local(char c, const char * __restrict delim) {
     return 0;
 }
 
-char *strtok(char * __restrict str, const char * __restrict delim) {
+char *strtok(char *str, const char *delim) {
     static char *saved = 0;
 
     if (str) {
@@ -52,5 +50,3 @@ char *strtok(char * __restrict str, const char * __restrict delim) {
 
     return token_start;
 }
-
-} // namespace sjtu
